@@ -25,6 +25,9 @@ function operate(operator,a,b) {
     return multiply(a,b);
   }
   else if(operator === ':') {
+    if(b === 0) {
+      return "Can't divide by 0";
+    }
     return divide(a,b);
   }
   else {
