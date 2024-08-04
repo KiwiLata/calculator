@@ -40,7 +40,7 @@ function splitInput(input) {
   let num2 = [];
   let index;
 
-  for(let i=0; i<input.length-1; i++) {
+  for(let i=0; i<input.length; i++) {
     if(Number.isInteger(input[i]) || input[i] === '.') {
       num1.push(input[i]);
     }
@@ -50,9 +50,12 @@ function splitInput(input) {
       break;
     }
   }
-  for(let j=index+1; j<input.length-1; j++) {
+  for(let j=index+1; j<input.length; j++) {
     if(Number.isInteger(input[j])) {
       num2.push(input[j]);
+    }
+    else if(input[j] === '=') {
+      break;
     }
   }
   a = Number(num1.join(''));
@@ -69,6 +72,17 @@ function clearDisplay() {
   equalStatus = false;
   inputDisplay.textContent = '';
   resultDisplay.textContent = '';
+}
+
+function chainOperate() {
+  splitInput(input);
+  let partial = operate(operator,a,b);
+  input = [];
+  input.push(partial);
+  inputDisplay.textContent = input.join('');
+  decimalStatus = false;
+  operatorStatus = false;
+  equalStatus = false;
 }
 
 const inputDisplay = document.querySelector(".input");
@@ -160,12 +174,16 @@ buttons.addEventListener("click", (event) => {
       operatorStatus = true;
       break;
     case ':': 
+      if(operatorStatus === true) {
+        chainOperate();
+        inputDisplay.textContent = input.join('');
+      }
       if(operatorStatus === false){
         input.push(':');
         inputDisplay.textContent = input.join('');
         decimalStatus = false;
+        operatorStatus = true;
       }
-      operatorStatus = true;
       break;
     case '=': 
       input.push('=');
