@@ -38,7 +38,7 @@ function splitInput(input) {
   let index;
 
   for(let i=0; i<input.length-1; i++) {
-    if(Number.isInteger(input[i])) {
+    if(Number.isInteger(input[i]) || input[i] === '.') {
       num1.push(input[i]);
     }
     else {
@@ -62,6 +62,7 @@ let input = [];
 let a;
 let b;
 let operator;
+let decimalStatus = false;
 
 const buttons = document.querySelector(".buttons");
 buttons.addEventListener("click", (event) => {
@@ -107,28 +108,44 @@ buttons.addEventListener("click", (event) => {
       input.push(9);
       inputDisplay.textContent = input.join('');
       break;
+    case '.': 
+      if(decimalStatus === false) {
+        input.push('.');
+        inputDisplay.textContent = input.join('');
+      }
+      decimalStatus = true;
+      break;
     case '+': 
       input.push('+');
       inputDisplay.textContent = input.join('');
+      decimalStatus = false;
       break;
     case '-': 
       input.push('-');
       inputDisplay.textContent = input.join('');
+      decimalStatus = false;
       break;
     case '*': 
       input.push('*');
       inputDisplay.textContent = input.join('');
+      decimalStatus = false;
       break;
     case ':': 
       input.push(':');
       inputDisplay.textContent = input.join('');
+      decimalStatus = false;
       break;
     case '=': 
       input.push('=');
       inputDisplay.textContent = input.join('');
+      decimalStatus = false;
       splitInput(input);
       let output = operate(operator,a,b);
       resultDisplay.textContent = output;
+      break;
+    case 'Undo': 
+      input.pop();
+      inputDisplay.textContent = input.join('');
       break;
     case 'C': 
       input = [];
