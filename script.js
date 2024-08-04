@@ -59,6 +59,18 @@ function splitInput(input) {
   b = Number(num2.join(''));
 }
 
+function clearDisplay() {
+  input = [];
+  a = null;
+  b = null;
+  operator = null;
+  decimalStatus = false;
+  operatorStatus = false;
+  equalStatus = false;
+  inputDisplay.textContent = '';
+  resultDisplay.textContent = '';
+}
+
 const inputDisplay = document.querySelector(".input");
 const resultDisplay = document.querySelector(".result");
 let input = [];
@@ -66,10 +78,15 @@ let a;
 let b;
 let operator;
 let decimalStatus = false;
+let operatorStatus = false;
+let equalStatus = false;
 
 const buttons = document.querySelector(".buttons");
 buttons.addEventListener("click", (event) => {
   let target = event.target;
+  if(equalStatus === true) {
+    clearDisplay();
+  }
   switch(target.textContent) {
     case '0': 
       input.push(0);
@@ -119,44 +136,63 @@ buttons.addEventListener("click", (event) => {
       decimalStatus = true;
       break;
     case '+': 
-      input.push('+');
-      inputDisplay.textContent = input.join('');
-      decimalStatus = false;
+      if(operatorStatus === false){
+        input.push('+');
+        inputDisplay.textContent = input.join('');
+        decimalStatus = false;
+      }
+      operatorStatus = true;
       break;
     case '-': 
-      input.push('-');
-      inputDisplay.textContent = input.join('');
-      decimalStatus = false;
+      if(operatorStatus === false){
+        input.push('-');
+        inputDisplay.textContent = input.join('');
+        decimalStatus = false;
+      }
+      operatorStatus = true;
       break;
     case '*': 
-      input.push('*');
-      inputDisplay.textContent = input.join('');
-      decimalStatus = false;
+      if(operatorStatus === false){
+        input.push('*');
+        inputDisplay.textContent = input.join('');
+        decimalStatus = false;
+      }
+      operatorStatus = true;
       break;
     case ':': 
-      input.push(':');
-      inputDisplay.textContent = input.join('');
-      decimalStatus = false;
+      if(operatorStatus === false){
+        input.push(':');
+        inputDisplay.textContent = input.join('');
+        decimalStatus = false;
+      }
+      operatorStatus = true;
       break;
     case '=': 
       input.push('=');
       inputDisplay.textContent = input.join('');
       decimalStatus = false;
+      operatorStatus = false;
+      equalStatus = true;
       splitInput(input);
       let output = operate(operator,a,b);
       resultDisplay.textContent = output;
       break;
     case 'Undo': 
-      input.pop();
+      let popped = input.pop();
+      if(popped === '+' ||
+        popped === '-' ||
+        popped === '*' ||
+        popped === ':'
+      ) {
+        operatorStatus = false;
+      }
+      else if(popped === '.') {
+        decimalStatus = false;
+      }
       inputDisplay.textContent = input.join('');
       break;
     case 'C': 
-      input = [];
-      a = null;
-      b = null;
-      operator = null;
-      inputDisplay.textContent = '';
-      resultDisplay.textContent = '';
+      clearDisplay()
       break;
   }
 })
