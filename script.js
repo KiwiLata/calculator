@@ -33,10 +33,31 @@ function operate(operator,a,b) {
 }
 
 function splitInput(input) {
-  
+  let num1 = [];
+  let num2 = [];
+  let index;
+
+  for(let i=0; i<input.length-1; i++) {
+    if(Number.isInteger(input[i])) {
+      num1.push(input[i]);
+    }
+    else {
+      operator = input[i];
+      index = i;
+      break;
+    }
+  }
+  for(let j=index+1; j<input.length-1; j++) {
+    if(Number.isInteger(input[j])) {
+      num2.push(input[j]);
+    }
+  }
+  a = Number(num1.join(''));
+  b = Number(num2.join(''));
 }
 
 const inputDisplay = document.querySelector(".input");
+const resultDisplay = document.querySelector(".result");
 let input = [];
 let a;
 let b;
@@ -105,10 +126,17 @@ buttons.addEventListener("click", (event) => {
     case '=': 
       input.push('=');
       inputDisplay.textContent = input.join('');
+      splitInput(input);
+      let output = operate(operator,a,b);
+      resultDisplay.textContent = output;
       break;
     case 'C': 
       input = [];
-      inputDisplay.textContent = input.join('');
+      a = null;
+      b = null;
+      operator = null;
+      inputDisplay.textContent = '';
+      resultDisplay.textContent = '';
       break;
   }
 })
